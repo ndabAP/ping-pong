@@ -1,0 +1,80 @@
+<html lang="en">
+
+<head>
+  <script type="text/javascript">
+    window.onload = function () {
+      if (window["WebSocket"]) {
+        const connection = new WebSocket(`ws://${document.location.host}/ws`)
+
+        const canvas = document.getElementById('canvas')
+        const ctx = canvas.getContext('2d')
+
+        connection.onmessage = function (event) {
+          const json = JSON.parse(event.data)
+
+          // Game
+          canvas.width = json.gameWidth
+          canvas.height = json.gameHeight
+          canvas.style.border = '2px solid white'
+
+          // Dotted centered line
+          ctx.beginPath()
+          ctx.setLineDash([2, 4])
+          ctx.beginPath()
+          ctx.moveTo(json.gameWidth / 2, 0)
+          ctx.lineTo(json.gameWidth / 2, json.gameHeight)
+          ctx.strokeStyle = 'white'
+          ctx.lineWidth = 2
+          ctx.stroke()
+
+          // Ball
+          ctx.beginPath()
+          ctx.arc(json.ballX, json.ballY, json.ballHeight, 0, 2 * Math.PI)
+          ctx.fillStyle = 'white';
+          ctx.fill()
+
+          // P1
+          ctx.beginPath()
+          ctx.rect(json.p1X, json.p1Y, json.p1Width, json.p1Height)
+          ctx.fillStyle = 'white';
+          ctx.fill()
+
+          // P2
+          ctx.beginPath()
+          ctx.rect(json.p2X, json.p2Y, json.p2Width, json.p2Height)
+          ctx.fillStyle = 'white';
+          ctx.fill()
+        }
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <style>
+    html {
+      background: black;
+    }
+
+    #container {
+      width: 100%;
+      text-align: center;
+    }
+
+    canvas {
+      border: 0px solid white;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      margin: auto;
+    }
+  </style>
+
+  <div id="container">
+    <canvas width="0" height="0" id="canvas"></canvas>
+  </div>
+</body>
+
+</html>
