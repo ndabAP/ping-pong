@@ -16,13 +16,6 @@ func init() {
 
 var engineLogger = log.New(os.Stdout, "[ENGINE] ", 0)
 
-//	                            y = max
-//		|----------|----------|
-//		|          |	  o   |
-//		| |        |          | y = 1/2
-//		|          |        | |
-//		|----------|----------|
-//	  x = 0      x = 1/2        x = max, y = 0
 type canvasEngine struct {
 	game Game
 
