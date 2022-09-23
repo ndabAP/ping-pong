@@ -37,22 +37,22 @@ func (e *canvasEngine) resetPlayers() *canvasEngine {
 }
 
 func (e *canvasEngine) fixPlayers() *canvasEngine {
-	// Top
+	// P1, top
 	if e.p1Y-default_padding <= baseline {
 		e.p1Y = baseline + default_padding
 		e.p1YVelocity = 0
 	}
-	// Bottom
+	// P1, bottom
 	if e.p1Y+e.game.p1.height >= e.game.height-default_padding {
 		e.p1Y = e.game.height - e.game.p1.height - default_padding
 		e.p1YVelocity = 0
 	}
-	// Top
+	// P2, top
 	if e.p2Y-default_padding <= baseline {
 		e.p2Y = baseline + default_padding
 		e.p2YVelocity = 0
 	}
-	// Bottom
+	// P2, bottom
 	if e.p2Y+e.game.p2.height >= e.game.height-default_padding {
 		e.p2Y = e.game.height - e.game.p2.height - default_padding
 		e.p2YVelocity = 0
@@ -77,22 +77,20 @@ func (e *canvasEngine) inverseBallVelXY() *canvasEngine {
 }
 
 func (e *canvasEngine) inverseBallVelX() *canvasEngine {
+	engineLogger.Println("inverse ball velocity x")
 	if e.ballXVelocity > 0 {
-		engineLogger.Println("inverse ball velocity x")
 		e.ballXVelocity = e.ballXVelocity * -1
 	} else {
-		engineLogger.Println("inverse ball velocity x")
 		e.ballXVelocity = math.Abs(e.ballXVelocity)
 	}
 	return e
 }
 
 func (e *canvasEngine) inverseBallVelY() *canvasEngine {
+	engineLogger.Println("inverse ball velocity y")
 	if e.ballYVelocity > 0 {
-		engineLogger.Println("inverse ball velocity y")
 		e.ballYVelocity = e.ballYVelocity * -1
 	} else {
-		engineLogger.Println("inverse ball velocity y")
 		e.ballYVelocity = math.Abs(e.ballYVelocity)
 	}
 	return e

@@ -11,13 +11,13 @@ func (e *canvasEngine) advanceGame() error {
 	switch e.detectCollision() {
 
 	case collisionP1Ceiling, collisionP1Ground, collisionP2Ceiling, collisionP2Ground:
-		e.inverseBallVelXY()
+		e.inverseBallVelXY().fixBall()
 
 	case collisionP1:
-		e.inverseBallVelX()
+		e.inverseBallVelX().fixBall()
 
 	case collisionP2:
-		e.inverseBallVelX()
+		e.inverseBallVelX().fixBall()
 
 	case collisionGroundLeftWall, collisionCeilingLeftWall:
 		return ErrP2Win
