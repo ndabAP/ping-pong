@@ -2,48 +2,72 @@
 
 <head>
   <script type="text/javascript">
-    window.onload = function () {
-      if (window["WebSocket"]) {
-        const connection = new WebSocket(`ws://${document.location.host}/ws`)
+    window.onload = () => {
+      if (!window["WebSocket"]) {
+        throw new Error('browsers doesn\'t support websocket')
+      }
 
-        const canvas = document.getElementById('canvas')
-        const ctx = canvas.getContext('2d')
+      const DEBUG_PADDING_X = 20
+      const DEBUG_PADDING_Y = 15
 
-        connection.onmessage = function (event) {
-          const json = JSON.parse(event.data)
+      const connection = new WebSocket(`ws://${document.location.host}/ws`)
 
-          // Game
-          canvas.width = json.gameWidth
-          canvas.height = json.gameHeight
-          canvas.style.border = '2px solid white'
+      const canvas = document.getElementById('canvas')
+      const ctx = canvas.getContext('2d')
 
-          // Dotted centered line
-          ctx.beginPath()
-          ctx.setLineDash([2, 4])
-          ctx.beginPath()
-          ctx.moveTo(json.gameWidth / 2, 0)
-          ctx.lineTo(json.gameWidth / 2, json.gameHeight)
-          ctx.strokeStyle = 'white'
-          ctx.lineWidth = 2
-          ctx.stroke()
+      canvas.style.border = '2px solid white'
 
-          // Ball
-          ctx.beginPath()
-          ctx.arc(json.ballX, json.ballY, json.ballHeight, 0, 2 * Math.PI)
-          ctx.fillStyle = 'white';
-          ctx.fill()
+      connection.onmessage = event => {
+        const frame = JSON.parse(event.data)
 
+        // Game
+        canvas.width = frame.gameWidth
+        canvas.height = frame.gameHeight
+
+        // Dotted centered line
+        ctx.beginPath()
+        ctx.setLineDash([2, 4])
+        ctx.beginPath()
+        ctx.moveTo(frame.gameWidth / 2, 0)
+        ctx.lineTo(frame.gameWidth / 2, frame.gameHeight)
+        ctx.strokeStyle = 'white'
+        ctx.lineWidth = 2
+        ctx.stroke()
+
+        // Ball
+        ctx.beginPath()
+        ctx.arc(frame.ballX, frame.ballY, frame.ballHeight, 0, 2 * Math.PI)
+        ctx.fillStyle = 'white'
+        ctx.fill()
+
+        // P1
+        ctx.beginPath()
+        ctx.rect(frame.p1X, frame.p1Y, frame.p1Width, frame.p1Height)
+        ctx.fillStyle = 'white'
+        ctx.fill()
+
+        // P2
+        ctx.beginPath()
+        ctx.rect(frame.p2X, frame.p2Y, frame.p2Width, frame.p2Height)
+        ctx.fillStyle = 'white'
+        ctx.fill()
+
+        // Debug
+        if (frame.debug) {
           // P1
-          ctx.beginPath()
-          ctx.rect(json.p1X, json.p1Y, json.p1Width, json.p1Height)
-          ctx.fillStyle = 'white';
-          ctx.fill()
+          ctx.font = '12px sans-serif'
+          ctx.fillStyle = 'white'
+          ctx.fillText('P1', frame.p1X + DEBUG_PADDING_X, frame.p1Y + DEBUG_PADDING_Y)
 
           // P2
-          ctx.beginPath()
-          ctx.rect(json.p2X, json.p2Y, json.p2Width, json.p2Height)
-          ctx.fillStyle = 'white';
-          ctx.fill()
+          ctx.font = '12px sans-serif'
+          ctx.fillStyle = 'white'
+          ctx.fillText('P2', frame.p2X - DEBUG_PADDING_X, frame.p2Y + DEBUG_PADDING_Y)
+
+          // Ball
+          ctx.font = '12px sans-serif'
+          ctx.fillStyle = 'white'
+          ctx.fillText('Ball', frame.ballX + DEBUG_PADDING_X - (frame.ballWidth / 2), frame.ballY + DEBUG_PADDING_Y - (frame.ballHeight / 2))
         }
       }
     }

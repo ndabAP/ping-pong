@@ -61,6 +61,7 @@ func (e *canvasEngine) advancePlayers() *canvasEngine {
 	case e.ballDirP2():
 		e.p2Y += e.ballYVelocity / e.fps
 		e.p2YVelocity = e.ballYVelocity
+
 	}
 	return e
 }

@@ -1,11 +1,23 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/websocket"
 )
+
+var debug = flag.Bool("debug", false, "")
+
+func main() {
+	flag.Parse()
+
+	http.HandleFunc("/", serveHome)
+	http.HandleFunc("/ws", serveWs)
+
+	log.Fatal(http.ListenAndServe("127.0.0.1:8080", nil))
+}
 
 var upgrader = websocket.Upgrader{}
 
@@ -40,10 +52,4 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	http.ServeFile(w, r, "home.html")
-}
-
-func main() {
-	http.HandleFunc("/", serveHome)
-	http.HandleFunc("/ws", serveWs)
-	log.Fatal(http.ListenAndServe("127.0.0.1:8080", nil))
 }

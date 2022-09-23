@@ -109,7 +109,7 @@ const (
 	baseline           = 0
 	default_padding    = 15
 	default_ball_x_vel = 0.25
-	min_y_vel          = 0.1
+	min_ball_y_vel     = 0.1
 	max_y_vel          = 0.15
 )
 
@@ -150,5 +150,6 @@ func (e *canvasEngine) mapFrame() map[string]interface{} {
 		"p2YVelocity":   e.p2YVelocity,
 		"ballXVelocity": e.ballXVelocity,
 		"ballYVelocity": e.ballYVelocity,
+		"debug":         e.game.debug,
 	}
 }

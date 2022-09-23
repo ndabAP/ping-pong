@@ -14,11 +14,18 @@ type Game struct {
 	ball ball
 
 	engine *canvasEngine
+
+	debug bool
 }
 
 var gameLogger = log.New(os.Stdout, "[GAME] ", 0)
 
 func NewGame(gWidth, gHeight float64, p1Width, p1Height, p2Width, p2height float64, bWidth, bHeight float64) (g Game) {
+	if *debug {
+		g.debug = *debug
+		gameLogger.Println("debug mode")
+	}
+
 	g.width = gWidth
 	g.height = gHeight
 
