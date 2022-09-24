@@ -105,11 +105,11 @@ func (e *canvasEngine) isCollisionP2() bool {
 }
 
 func (e *canvasEngine) isCollisionCeiling() bool {
-	return e.ballY <= baseline+e.game.ball.height
+	return e.ballY <= baseline+e.game.ball.height+canvas_border_correction
 }
 
 func (e *canvasEngine) isCollisionGround() bool {
-	return e.ballY+e.game.ball.height >= e.game.height
+	return e.ballY+e.game.ball.height >= e.game.height-canvas_border_correction
 }
 
 func (e *canvasEngine) isCollisionLeftWall() bool {

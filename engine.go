@@ -110,7 +110,7 @@ const (
 	default_padding          = 15
 	canvas_border_correction = 1
 
-	default_ball_x_vel_ratio = 0.30
+	default_ball_x_vel_ratio = 0.28
 	min_ball_y_vel_ratio     = 0.1
 	max_y_vel_ratio          = 0.25
 )

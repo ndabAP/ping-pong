@@ -63,11 +63,11 @@ func (e *canvasEngine) fixPlayers() *canvasEngine {
 func (e *canvasEngine) fixBall() *canvasEngine {
 	// Top
 	if e.ballY <= baseline {
-		e.ballY = baseline - math.SmallestNonzeroFloat64
+		e.ballY = baseline - 1
 	}
 	// Bottom
 	if e.ballY+e.game.ball.height >= e.game.height {
-		e.ballY = e.game.height - e.game.ball.height - math.SmallestNonzeroFloat64
+		e.ballY = e.game.height - e.game.ball.height - 1
 	}
 	return e
 }
