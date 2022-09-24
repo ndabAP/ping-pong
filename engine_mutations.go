@@ -15,13 +15,13 @@ func (e *canvasEngine) resetBall() *canvasEngine {
 func (e *canvasEngine) randomBall() *canvasEngine {
 	// Left or right
 	if rand.Intn(10) < 5 {
-		e.ballXVelocity = -default_ball_x_vel * e.game.width
-		v := min_ball_y_vel*e.game.height + rand.Float64()*((max_y_vel*e.game.height)-(min_ball_y_vel*e.game.height))
-		e.ballYVelocity = -v
+		e.ballXVelocity = -default_ball_x_vel_ratio * e.game.width
+		y := min_ball_y_vel_ratio*e.game.height + rand.Float64()*((max_y_vel_ratio*e.game.height)-(min_ball_y_vel_ratio*e.game.height))
+		e.ballYVelocity = -y
 	} else {
-		e.ballXVelocity = default_ball_x_vel * e.game.width
-		v := min_ball_y_vel*e.game.height + rand.Float64()*((max_y_vel*e.game.height)-(min_ball_y_vel*e.game.height))
-		e.ballYVelocity = v
+		e.ballXVelocity = default_ball_x_vel_ratio * e.game.width
+		y := min_ball_y_vel_ratio*e.game.height + rand.Float64()*((max_y_vel_ratio*e.game.height)-(min_ball_y_vel_ratio*e.game.height))
+		e.ballYVelocity = y
 	}
 	return e
 }

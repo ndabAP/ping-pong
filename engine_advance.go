@@ -1,6 +1,8 @@
 package main
 
-import "errors"
+import (
+	"errors"
+)
 
 var (
 	ErrP1Win = errors.New("p1 win")
@@ -55,13 +57,34 @@ func (e *canvasEngine) advanceBall() *canvasEngine {
 func (e *canvasEngine) advancePlayers() *canvasEngine {
 	switch {
 	case e.ballDirP1():
-		e.p1Y += e.ballYVelocity / e.fps
-		e.p1YVelocity = e.ballYVelocity
+		distP1Ball := (e.p1Y + (e.game.p1.height / 2)) - e.ballY
+		switch {
+		case distP1Ball > 0:
+			// Go up
+			e.p1YVelocity = max_y_vel_ratio * e.game.height
+			e.p1Y -= e.p1YVelocity / e.fps
+		case distP1Ball < 0:
+			// Go down
+			e.p1YVelocity = max_y_vel_ratio * e.game.height
+			e.p1Y += e.p1YVelocity / e.fps
+		case distP1Ball == 0:
+			// Perfect
+		}
 
 	case e.ballDirP2():
-		e.p2Y += e.ballYVelocity / e.fps
-		e.p2YVelocity = e.ballYVelocity
-
+		distP2Ball := (e.p2Y + (e.game.p2.height / 2)) - e.ballY
+		switch {
+		case distP2Ball > 0:
+			// Go up
+			e.p2YVelocity = max_y_vel_ratio * e.game.height
+			e.p2Y -= e.p2YVelocity / e.fps
+		case distP2Ball < 0:
+			// Go down
+			e.p2YVelocity = max_y_vel_ratio * e.game.height
+			e.p2Y += e.p2YVelocity / e.fps
+		case distP2Ball == 0:
+			// Perfect
+		}
 	}
 	return e
 }

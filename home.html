@@ -60,6 +60,9 @@
         ctx.strokeStyle = 'white'
         ctx.lineWidth = 2
         ctx.stroke()
+        // Reset
+        ctx.setLineDash([0, 0])
+        ctx.lineWidth = undefined
 
         // Ball
         ctx.beginPath()
@@ -99,7 +102,6 @@
           ctx.direction = 'rtl'
           ctx.fillText(`x: ${p2X}, y: ${p2Y}`, p2X - DEBUG_PADDING_X + p2Width, p2Y + DEFAULT_LINE_HEIGHT + DEBUG_PADDING_Y)
           ctx.fillText(`y velocity: ${p2YVelocity}`, p2X - DEBUG_PADDING_X + p2Width, p2Y + DEFAULT_LINE_HEIGHT * 2 + DEBUG_PADDING_Y)
-
           // Reset
           ctx.direction = 'ltr'
 
@@ -111,6 +113,13 @@
           ctx.fillStyle = 'white'
           ctx.fillText(`x: ${ballX}, y: ${ballY}`, ballX + DEBUG_PADDING_X - (ballHeight / 2), ballY + DEFAULT_LINE_HEIGHT + DEBUG_PADDING_Y - (ballHeight / 2))
           ctx.fillText(`x velocity: ${ballXVelocity}, y velocity: ${ballYVelocity}`, ballX + DEBUG_PADDING_X - (ballHeight / 2), ballY + DEFAULT_LINE_HEIGHT * 2 + DEBUG_PADDING_Y - (ballHeight / 2))
+          // Ball velocity
+          ctx.beginPath()
+          ctx.moveTo(ballX, ballY)
+          ctx.lineTo(ballX + ballXVelocity, ballY + ballYVelocity)
+          ctx.strokeStyle = 'white'
+          ctx.lineWidth = 1
+          ctx.stroke()
         }
       }
     }

@@ -110,9 +110,9 @@ const (
 	default_padding          = 15
 	canvas_border_correction = 1
 
-	default_ball_x_vel = 0.25
-	min_ball_y_vel     = 0.1
-	max_y_vel          = 0.15
+	default_ball_x_vel_ratio = 0.30
+	min_ball_y_vel_ratio     = 0.1
+	max_y_vel_ratio          = 0.25
 )
 
 func (e *canvasEngine) ballDirP1() bool {
