@@ -106,8 +106,9 @@ func (e *canvasEngine) jsonFrame() ([]byte, error) {
 }
 
 const (
-	baseline        = 0
-	default_padding = 15
+	baseline                 = 0
+	default_padding          = 15
+	canvas_border_correction = 1
 
 	default_ball_x_vel = 0.25
 	min_ball_y_vel     = 0.1
