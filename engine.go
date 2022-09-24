@@ -9,11 +9,6 @@ import (
 	"time"
 )
 
-func init() {
-	// Real random
-	rand.Seed(time.Now().UnixNano())
-}
-
 var engineLogger = log.New(os.Stdout, "[ENGINE] ", 0)
 
 type canvasEngine struct {
@@ -30,6 +25,8 @@ type canvasEngine struct {
 	p2YVelocity   float64
 	ballXVelocity float64
 	ballYVelocity float64
+
+	// TODO Acceleration: Velocity increase per time
 
 	fps float64
 	tps float64
@@ -55,6 +52,9 @@ func newCanvasEngine(g Game) *canvasEngine {
 
 func (e *canvasEngine) bootstrap() *canvasEngine {
 	engineLogger.Println("bootstrap ...")
+
+	// Real random
+	rand.Seed(time.Now().UnixNano())
 
 	time.Sleep(750 * time.Millisecond)
 
@@ -106,8 +106,9 @@ func (e *canvasEngine) jsonFrame() ([]byte, error) {
 }
 
 const (
-	baseline           = 0
-	default_padding    = 15
+	baseline        = 0
+	default_padding = 15
+
 	default_ball_x_vel = 0.25
 	min_ball_y_vel     = 0.1
 	max_y_vel          = 0.15
@@ -132,6 +133,7 @@ func (e *canvasEngine) log() *canvasEngine {
 
 func (e *canvasEngine) mapFrame() map[string]interface{} {
 	return map[string]interface{}{
+		"debug":         e.game.debug,
 		"gameWidth":     e.game.width,
 		"gameHeight":    e.game.height,
 		"p1Width":       e.game.p1.width,
@@ -150,6 +152,5 @@ func (e *canvasEngine) mapFrame() map[string]interface{} {
 		"p2YVelocity":   e.p2YVelocity,
 		"ballXVelocity": e.ballXVelocity,
 		"ballYVelocity": e.ballYVelocity,
-		"debug":         e.game.debug,
 	}
 }

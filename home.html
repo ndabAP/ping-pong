@@ -4,11 +4,12 @@
   <script type="text/javascript">
     window.onload = () => {
       if (!window["WebSocket"]) {
-        throw new Error('browsers doesn\'t support websocket')
+        throw new Error('browser doesn\'t support websocket')
       }
 
       const DEBUG_PADDING_X = 20
       const DEBUG_PADDING_Y = 15
+      const DEFAULT_LINE_HEIGHT = 16
 
       const connection = new WebSocket(`ws://${document.location.host}/ws`)
 
@@ -18,56 +19,98 @@
       canvas.style.border = '2px solid white'
 
       connection.onmessage = event => {
-        const frame = JSON.parse(event.data)
+        let {
+          debug,
+          gameWidth, gameHeight,
+          ballWidth, ballHeight,
+          ballX, ballY,
+          ballXVelocity, ballYVelocity,
+          p1Width, p1Height,
+          p2Width, p2Height,
+          p1X, p1Y,
+          p2X, p2Y,
+          p1XVelocity, p1YVelocity,
+          p2XVelocity, p2YVelocity,
+        } = JSON.parse(event.data)
+
+        // Half pixel doesn't exist
+        ballX = Math.round(ballX)
+        ballY = Math.round(ballY)
+        ballXVelocity = Math.round(ballXVelocity)
+        ballYVelocity = Math.round(ballYVelocity)
+        p1X = Math.round(p1X)
+        p1Y = Math.round(p1Y)
+        p1XVelocity = Math.round(p1XVelocity)
+        p1YVelocity = Math.round(p1YVelocity)
+        p2X = Math.round(p2X)
+        p2Y = Math.round(p2Y)
+        p2XVelocity = Math.round(p2XVelocity)
+        p2YVelocity = Math.round(p2YVelocity)
 
         // Game
-        canvas.width = frame.gameWidth
-        canvas.height = frame.gameHeight
+        canvas.width = gameWidth
+        canvas.height = gameHeight
 
         // Dotted centered line
         ctx.beginPath()
         ctx.setLineDash([2, 4])
         ctx.beginPath()
-        ctx.moveTo(frame.gameWidth / 2, 0)
-        ctx.lineTo(frame.gameWidth / 2, frame.gameHeight)
+        ctx.moveTo(gameWidth / 2, 0)
+        ctx.lineTo(gameWidth / 2, gameHeight)
         ctx.strokeStyle = 'white'
         ctx.lineWidth = 2
         ctx.stroke()
 
         // Ball
         ctx.beginPath()
-        ctx.arc(frame.ballX, frame.ballY, frame.ballHeight, 0, 2 * Math.PI)
+        ctx.arc(ballX, ballY, ballHeight, 0, 2 * Math.PI)
         ctx.fillStyle = 'white'
         ctx.fill()
 
         // P1
         ctx.beginPath()
-        ctx.rect(frame.p1X, frame.p1Y, frame.p1Width, frame.p1Height)
+        ctx.rect(p1X, p1Y, p1Width, p1Height)
         ctx.fillStyle = 'white'
         ctx.fill()
 
         // P2
         ctx.beginPath()
-        ctx.rect(frame.p2X, frame.p2Y, frame.p2Width, frame.p2Height)
+        ctx.rect(p2X, p2Y, p2Width, p2Height)
         ctx.fillStyle = 'white'
         ctx.fill()
 
-        // Debug
-        if (frame.debug) {
+        if (debug) {
           // P1
           ctx.font = '12px sans-serif'
           ctx.fillStyle = 'white'
-          ctx.fillText('P1', frame.p1X + DEBUG_PADDING_X, frame.p1Y + DEBUG_PADDING_Y)
+          ctx.fillText('P1', p1X + DEBUG_PADDING_X, p1Y + DEBUG_PADDING_Y)
+          ctx.font = '12px sans-serif'
+          ctx.fillStyle = 'white'
+          ctx.fillText(`x: ${p1X}, y: ${p1Y}`, p1X + DEBUG_PADDING_X, p1Y + DEFAULT_LINE_HEIGHT + DEBUG_PADDING_Y)
+          ctx.fillText(`y velocity: ${p1YVelocity}`, p1X + DEBUG_PADDING_X, p1Y + DEFAULT_LINE_HEIGHT * 2 + DEBUG_PADDING_Y)
 
           // P2
           ctx.font = '12px sans-serif'
           ctx.fillStyle = 'white'
-          ctx.fillText('P2', frame.p2X - DEBUG_PADDING_X, frame.p2Y + DEBUG_PADDING_Y)
+          ctx.direction = 'rtl'
+          ctx.fillText('P2', p2X - DEBUG_PADDING_X + p2Width, p2Y + DEBUG_PADDING_Y)
+          ctx.font = '12px sans-serif'
+          ctx.fillStyle = 'white'
+          ctx.direction = 'rtl'
+          ctx.fillText(`x: ${p2X}, y: ${p2Y}`, p2X - DEBUG_PADDING_X + p2Width, p2Y + DEFAULT_LINE_HEIGHT + DEBUG_PADDING_Y)
+          ctx.fillText(`y velocity: ${p2YVelocity}`, p2X - DEBUG_PADDING_X + p2Width, p2Y + DEFAULT_LINE_HEIGHT * 2 + DEBUG_PADDING_Y)
+
+          // Reset
+          ctx.direction = 'ltr'
 
           // Ball
           ctx.font = '12px sans-serif'
           ctx.fillStyle = 'white'
-          ctx.fillText('Ball', frame.ballX + DEBUG_PADDING_X - (frame.ballWidth / 2), frame.ballY + DEBUG_PADDING_Y - (frame.ballHeight / 2))
+          ctx.fillText('Ball', ballX + DEBUG_PADDING_X - (ballHeight / 2), ballY + DEBUG_PADDING_Y - (ballHeight / 2))
+          ctx.font = '12px sans-serif'
+          ctx.fillStyle = 'white'
+          ctx.fillText(`x: ${ballX}, y: ${ballY}`, ballX + DEBUG_PADDING_X - (ballHeight / 2), ballY + DEFAULT_LINE_HEIGHT + DEBUG_PADDING_Y - (ballHeight / 2))
+          ctx.fillText(`x velocity: ${ballXVelocity}, y velocity: ${ballYVelocity}`, ballX + DEBUG_PADDING_X - (ballHeight / 2), ballY + DEFAULT_LINE_HEIGHT * 2 + DEBUG_PADDING_Y - (ballHeight / 2))
         }
       }
     }
