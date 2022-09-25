@@ -26,8 +26,6 @@ type canvasEngine struct {
 	ballXVelocity float64
 	ballYVelocity float64
 
-	// TODO Acceleration: Velocity increase per time
-
 	fps float64
 	tps float64
 }
@@ -92,10 +90,7 @@ func (e *canvasEngine) writeFrames(gameCtx context.Context, frames chan []byte) 
 
 				e.log()
 
-				jsonFrame, err := e.jsonFrame()
-				if err != nil {
-					panic(err)
-				}
+				jsonFrame, _ := e.jsonFrame()
 				frames <- jsonFrame
 
 				ticks++
