@@ -75,24 +75,19 @@ func (e *canvasEngine) writeFrames(gameCtx context.Context, frames chan []byte) 
 				engineLogger.Println("next tick ...")
 
 				if err := e.advanceGame(); err != nil {
+					engineLogger.Println(err.Error())
+
 					switch err {
 					case ErrP1Win:
 						e.game.p1Score += 1
 
-						// Restart
-						e.bootstrap().writeFrames(gameCtx, frames)
-						return
-
 					case ErrP2Win:
 						e.game.p2Score += 1
-
-						e.bootstrap().writeFrames(gameCtx, frames)
-						return
-
-					default:
-						e.bootstrap().writeFrames(gameCtx, frames)
-						return
 					}
+
+					// Reset
+					e.bootstrap().writeFrames(gameCtx, frames)
+					return
 				}
 
 				e.log()
