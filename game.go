@@ -7,15 +7,17 @@ import (
 )
 
 type Game struct {
+	debug bool
+
 	width, height float64
 
 	p1, p2 player
 
+	p1Score, p2Score uint
+
 	ball ball
 
 	engine *canvasEngine
-
-	debug bool
 }
 
 var gameLogger = log.New(os.Stdout, "[GAME] ", 0)

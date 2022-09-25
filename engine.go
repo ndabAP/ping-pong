@@ -75,9 +75,24 @@ func (e *canvasEngine) writeFrames(gameCtx context.Context, frames chan []byte) 
 				engineLogger.Println("next tick ...")
 
 				if err := e.advanceGame(); err != nil {
-					// Restart
-					e.bootstrap().writeFrames(gameCtx, frames)
-					return
+					switch err {
+					case ErrP1Win:
+						e.game.p1Score += 1
+
+						// Restart
+						e.bootstrap().writeFrames(gameCtx, frames)
+						return
+
+					case ErrP2Win:
+						e.game.p2Score += 1
+
+						e.bootstrap().writeFrames(gameCtx, frames)
+						return
+
+					default:
+						e.bootstrap().writeFrames(gameCtx, frames)
+						return
+					}
 				}
 
 				e.log()
@@ -132,9 +147,12 @@ func (e *canvasEngine) log() *canvasEngine {
 	return e
 }
 
+// TODO Convert to int here already
 func (e *canvasEngine) mapFrame() map[string]interface{} {
 	return map[string]interface{}{
 		"debug":         e.game.debug,
+		"p1Score":       e.game.p1Score,
+		"p2Score":       e.game.p2Score,
 		"gameWidth":     e.game.width,
 		"gameHeight":    e.game.height,
 		"p1Width":       e.game.p1.width,

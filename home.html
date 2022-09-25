@@ -22,6 +22,7 @@
         let {
           debug,
           gameWidth, gameHeight,
+          p1Score, p2Score,
           ballWidth, ballHeight,
           ballX, ballY,
           ballXVelocity, ballYVelocity,
@@ -51,6 +52,18 @@
         canvas.width = gameWidth
         canvas.height = gameHeight
 
+        // Scores
+        // P1
+        ctx.font = '12px sans-serif'
+        ctx.fillStyle = 'white'
+        ctx.fillText(`${p1Score}`, gameWidth / 2 - DEBUG_PADDING_X, 0 + DEBUG_PADDING_Y)
+        // P2
+        ctx.font = '12px sans-serif'
+        ctx.fillStyle = 'white'
+        ctx.direction = 'rtl'
+        ctx.fillText(`${p2Score}`, gameWidth / 2 + DEBUG_PADDING_X, 0 + DEBUG_PADDING_Y)
+        ctx.direction = 'ltr'
+
         // Dotted centered line
         ctx.beginPath()
         ctx.setLineDash([2, 4])
@@ -62,7 +75,7 @@
         ctx.stroke()
         // Reset
         ctx.setLineDash([0, 0])
-        ctx.lineWidth = undefined
+        ctx.lineWidth = null
 
         // Ball
         ctx.beginPath()
