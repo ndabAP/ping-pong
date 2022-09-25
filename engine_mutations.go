@@ -3,16 +3,23 @@ package main
 import (
 	"math"
 	"math/rand"
+	"time"
 )
 
 func (e *canvasEngine) resetBall() *canvasEngine {
+	engineLogger.Println("reset ball ...")
 	// Center
 	e.ballX = e.game.width / 2.0
 	e.ballY = e.game.height / 2.0
+
+	time.Sleep(250 * time.Millisecond)
+
 	return e
 }
 
 func (e *canvasEngine) randomBall() *canvasEngine {
+	engineLogger.Println("random ball ...")
+
 	// Left or right
 	if rand.Intn(10) < 5 {
 		e.ballXVelocity = -default_ball_x_vel_ratio * e.game.width
@@ -23,16 +30,24 @@ func (e *canvasEngine) randomBall() *canvasEngine {
 		y := min_ball_y_vel_ratio*e.game.height + rand.Float64()*((max_y_vel_ratio*e.game.height)-(min_ball_y_vel_ratio*e.game.height))
 		e.ballYVelocity = y
 	}
+
+	time.Sleep(250 * time.Millisecond)
+
 	return e
 }
 
 func (e *canvasEngine) resetPlayers() *canvasEngine {
+	engineLogger.Println("reset players ...")
+
 	// P1
 	e.p1X = 0 + default_padding
 	e.p1Y = e.game.height/2 - e.game.p1.height/2
 	// P2
 	e.p2X = e.game.width - +e.game.p1.width - default_padding
 	e.p2Y = e.game.height/2 - e.game.p2.height/2
+
+	time.Sleep(250 * time.Millisecond)
+
 	return e
 }
 

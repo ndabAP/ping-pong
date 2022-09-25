@@ -11,8 +11,7 @@ type Game struct {
 
 	width, height float64
 
-	p1, p2 player
-
+	p1, p2           player
 	p1Score, p2Score uint
 
 	ball ball
@@ -28,6 +27,7 @@ func NewGame(gWidth, gHeight int64, p1Width, p1Height, p2Width, p2height int64, 
 		gameLogger.Println("debug mode")
 	}
 
+	// Validate
 	if gWidth%2 != 0 ||
 		gHeight%2 != 0 ||
 		p1Width%2 != 0 ||

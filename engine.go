@@ -14,17 +14,11 @@ var engineLogger = log.New(os.Stdout, "[ENGINE] ", 0)
 type canvasEngine struct {
 	game Game
 
-	ballX float64
-	ballY float64
-	p1X   float64
-	p1Y   float64
-	p2X   float64
-	p2Y   float64
+	ballX, ballY       float64
+	p1X, p1Y, p2X, p2Y float64
 
-	p1YVelocity   float64
-	p2YVelocity   float64
-	ballXVelocity float64
-	ballYVelocity float64
+	p1YVelocity, p2YVelocity     float64
+	ballXVelocity, ballYVelocity float64
 
 	fps float64
 	tps float64
@@ -42,8 +36,14 @@ func newCanvasEngine(g Game) *canvasEngine {
 
 	e.game = g
 
+	if int(_fps)%2 != 0 || int(_tps)%2 != 0 {
+		panic("values must be dividable by two")
+	}
+
 	e.fps = _fps
 	e.tps = _tps
+
+	engineLogger.Printf("fps: %d, tps: %d", int(e.fps), int(e.tps))
 
 	return e
 }
@@ -100,6 +100,8 @@ func (e *canvasEngine) writeFrames(gameCtx context.Context, frames chan []byte) 
 			case <-gameCtx.Done():
 				ticker.Stop()
 
+				engineLogger.Print("engine stops ...")
+
 				return
 			}
 		}
@@ -135,7 +137,7 @@ func (e *canvasEngine) log() *canvasEngine {
 	if err != nil {
 		panic(err)
 	}
-	engineLogger.Printf("%s", jsonBytes)
+	engineLogger.Printf("frame: %s", jsonBytes)
 	return e
 }
 

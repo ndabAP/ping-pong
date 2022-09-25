@@ -4,9 +4,12 @@ import (
 	"flag"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/websocket"
 )
+
+var serverLogger = log.New(os.Stdout, "[SERVER] ", 0)
 
 var debug = flag.Bool("debug", false, "")
 
@@ -16,12 +19,16 @@ func main() {
 	http.HandleFunc("/", serveHome)
 	http.HandleFunc("/ws", serveWs)
 
+	serverLogger.Println("now open your browser at http://localhost:8080")
+
 	log.Fatal(http.ListenAndServe("127.0.0.1:8080", nil))
 }
 
 var upgrader = websocket.Upgrader{}
 
 func serveWs(w http.ResponseWriter, r *http.Request) {
+	serverLogger.Println("found websocket handler")
+
 	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		panic(err)
@@ -31,13 +38,13 @@ func serveWs(w http.ResponseWriter, r *http.Request) {
 	done := make(chan struct{}, 1)
 
 	g := NewGame(1000, 600, 10, 150, 10, 150, 8, 8)
-	jsonSnapshots := make(chan []byte, 10)
+	jsonFrames := make(chan []byte, 10)
 	go func() {
-		for jsonSnapshot := range jsonSnapshots {
+		for jsonSnapshot := range jsonFrames {
 			ws.WriteMessage(websocket.TextMessage, jsonSnapshot)
 		}
 	}()
-	g.Start(r.Context(), jsonSnapshots)
+	g.Start(r.Context(), jsonFrames)
 
 	<-done
 }
