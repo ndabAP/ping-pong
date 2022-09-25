@@ -22,19 +22,30 @@ type Game struct {
 
 var gameLogger = log.New(os.Stdout, "[GAME] ", 0)
 
-func NewGame(gWidth, gHeight float64, p1Width, p1Height, p2Width, p2height float64, bWidth, bHeight float64) (g Game) {
+func NewGame(gWidth, gHeight int64, p1Width, p1Height, p2Width, p2height int64, bWidth, bHeight int64) (g Game) {
 	if *debug {
 		g.debug = *debug
 		gameLogger.Println("debug mode")
 	}
 
-	g.width = gWidth
-	g.height = gHeight
+	if gWidth%2 != 0 ||
+		gHeight%2 != 0 ||
+		p1Width%2 != 0 ||
+		p1Height%2 != 0 ||
+		p2Width%2 != 0 ||
+		p2height%2 != 0 ||
+		bWidth%2 != 0 ||
+		bHeight%2 != 0 {
+		panic("values must be dividable by two")
+	}
 
-	g.p1 = newPlayer1(p1Width, p1Height)
-	g.p2 = newPlayer2(p2Width, p2height)
+	g.width = float64(gWidth)
+	g.height = float64(gHeight)
 
-	g.ball = newBall(bWidth, bHeight)
+	g.p1 = newPlayer1(float64(p1Width), float64(p1Height))
+	g.p2 = newPlayer2(float64(p2Width), float64(p2height))
+
+	g.ball = newBall(float64(bWidth), float64(bHeight))
 
 	g.engine = newCanvasEngine(g)
 

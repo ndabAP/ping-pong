@@ -89,7 +89,7 @@ func (e *canvasEngine) detectCollision() collision {
 }
 
 func (e *canvasEngine) isCollisionP1() bool {
-	x := e.ballX <= (e.p1X + e.game.p1.width)
+	x := e.ballX <= (e.p1X + e.game.p1.width + magic_p)
 	y1 := e.p1Y <= e.ballY
 	y2 := (e.p1Y + e.game.p1.height) >= e.ballY
 	y := y1 && y2

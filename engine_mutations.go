@@ -71,11 +71,11 @@ func (e *canvasEngine) fixBall() *canvasEngine {
 	}
 	// P1
 	if e.ballX-e.game.ball.width <= e.p1X+e.game.p1.width {
-		e.ballX = e.p1X + e.game.p1.width + 1
+		e.ballX = e.p1X + e.game.p1.width + magic_p
 	}
 	// P2
 	if e.ballX+e.game.ball.width >= e.p2X {
-		e.ballX = e.p2X - 3
+		e.ballX = e.p2X - magic_p
 	}
 	return e
 }

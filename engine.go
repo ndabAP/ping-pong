@@ -123,6 +123,8 @@ const (
 	default_ball_x_vel_ratio = 0.28
 	min_ball_y_vel_ratio     = 0.1
 	max_y_vel_ratio          = 0.25
+
+	magic_p = 3
 )
 
 func (e *canvasEngine) ballDirP1() bool {
@@ -145,17 +147,19 @@ func (e *canvasEngine) log() *canvasEngine {
 // TODO Convert to int here already
 func (e *canvasEngine) mapFrame() map[string]interface{} {
 	return map[string]interface{}{
-		"debug":         e.game.debug,
-		"p1Score":       e.game.p1Score,
-		"p2Score":       e.game.p2Score,
-		"gameWidth":     e.game.width,
-		"gameHeight":    e.game.height,
-		"p1Width":       e.game.p1.width,
-		"p1Height":      e.game.p1.height,
-		"p2Width":       e.game.p2.width,
-		"p2Height":      e.game.p2.height,
-		"ballWidth":     e.game.ball.width,
-		"ballHeight":    e.game.ball.height,
+		"debug":      e.game.debug,
+		"p1Score":    e.game.p1Score,
+		"p2Score":    e.game.p2Score,
+		"gameWidth":  e.game.width,
+		"gameHeight": e.game.height,
+		"p1Width":    e.game.p1.width,
+		"p1Height":   e.game.p1.height,
+		"p2Width":    e.game.p2.width,
+		"p2Height":   e.game.p2.height,
+		"ballWidth":  e.game.ball.width,
+		"ballHeight": e.game.ball.height,
+
+		// There are no half pixel
 		"ballX":         int(e.ballX),
 		"ballY":         int(e.ballY),
 		"p1X":           int(e.p1X),

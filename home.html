@@ -40,12 +40,12 @@
 
         // Scores
         // P1
-        ctx.font = '12px sans-serif'
+        ctx.font = '16px sans-serif'
         ctx.fillStyle = 'white'
-        ctx.fillText(`${p1Score}`, gameWidth / 2 - DEBUG_PADDING_X, 0 + DEBUG_PADDING_Y)
+        ctx.fillText(`${p1Score}`, gameWidth / 2 - DEBUG_PADDING_X, 0 + DEBUG_PADDING_Y * 1.5)
         // P2
         ctx.direction = 'rtl'
-        ctx.fillText(`${p2Score}`, gameWidth / 2 + DEBUG_PADDING_X, 0 + DEBUG_PADDING_Y)
+        ctx.fillText(`${p2Score}`, gameWidth / 2 + DEBUG_PADDING_X, 0 + DEBUG_PADDING_Y * 1.5)
         // Reset
         ctx.direction = 'ltr'
 
