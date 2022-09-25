@@ -6,8 +6,9 @@ import (
 	"time"
 )
 
-func (e *canvasEngine) resetBall() *canvasEngine {
+func (e *canvasEngine) centerBall() *canvasEngine {
 	engineLogger.Println("reset ball ...")
+
 	// Center
 	e.ballX = e.game.width / 2.0
 	e.ballY = e.game.height / 2.0
@@ -17,7 +18,7 @@ func (e *canvasEngine) resetBall() *canvasEngine {
 	return e
 }
 
-func (e *canvasEngine) randomBall() *canvasEngine {
+func (e *canvasEngine) randomBallDir() *canvasEngine {
 	engineLogger.Println("random ball ...")
 
 	// Left or right
@@ -36,7 +37,7 @@ func (e *canvasEngine) randomBall() *canvasEngine {
 	return e
 }
 
-func (e *canvasEngine) resetPlayers() *canvasEngine {
+func (e *canvasEngine) centerPlayers() *canvasEngine {
 	engineLogger.Println("reset players ...")
 
 	// P1
@@ -51,7 +52,7 @@ func (e *canvasEngine) resetPlayers() *canvasEngine {
 	return e
 }
 
-func (e *canvasEngine) fixPlayers() *canvasEngine {
+func (e *canvasEngine) deglitchPlayers() *canvasEngine {
 	// P1, top
 	if e.p1Y-default_padding <= baseline {
 		e.p1Y = baseline + default_padding
@@ -75,7 +76,7 @@ func (e *canvasEngine) fixPlayers() *canvasEngine {
 	return e
 }
 
-func (e *canvasEngine) fixBall() *canvasEngine {
+func (e *canvasEngine) deglitchBall() *canvasEngine {
 	// Top
 	if e.ballY <= baseline {
 		e.ballY = baseline - 1
@@ -95,11 +96,11 @@ func (e *canvasEngine) fixBall() *canvasEngine {
 	return e
 }
 
-func (e *canvasEngine) inverseBallVelXY() *canvasEngine {
-	return e.inverseBallVelX().inverseBallVelY()
+func (e *canvasEngine) inverseBallXYVel() *canvasEngine {
+	return e.inverseBallXVel().inverseBallYVel()
 }
 
-func (e *canvasEngine) inverseBallVelX() *canvasEngine {
+func (e *canvasEngine) inverseBallXVel() *canvasEngine {
 	engineLogger.Println("inverse ball velocity x")
 	if e.ballXVelocity > 0 {
 		e.ballXVelocity = e.ballXVelocity * -1
@@ -109,7 +110,7 @@ func (e *canvasEngine) inverseBallVelX() *canvasEngine {
 	return e
 }
 
-func (e *canvasEngine) inverseBallVelY() *canvasEngine {
+func (e *canvasEngine) inverseBallYVel() *canvasEngine {
 	engineLogger.Println("inverse ball velocity y")
 	if e.ballYVelocity > 0 {
 		e.ballYVelocity = e.ballYVelocity * -1

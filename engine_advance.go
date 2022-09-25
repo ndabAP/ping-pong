@@ -13,13 +13,13 @@ func (e *canvasEngine) advanceGame() error {
 	switch e.detectCollision() {
 
 	case collisionP1Ceiling, collisionP1Ground, collisionP2Ceiling, collisionP2Ground:
-		e.inverseBallVelXY().fixBall()
+		e.inverseBallXYVel().deglitchBall()
 
 	case collisionP1:
-		e.inverseBallVelX().fixBall()
+		e.inverseBallXVel().deglitchBall()
 
 	case collisionP2:
-		e.inverseBallVelX().fixBall()
+		e.inverseBallXVel().deglitchBall()
 
 	case collisionGroundLeftWall, collisionCeilingLeftWall:
 		return ErrP2Win
@@ -28,10 +28,10 @@ func (e *canvasEngine) advanceGame() error {
 		return ErrP1Win
 
 	case collisionCeiling:
-		e.inverseBallVelY().fixBall()
+		e.inverseBallYVel().deglitchBall()
 
 	case collisionGround:
-		e.inverseBallVelY().fixBall()
+		e.inverseBallYVel().deglitchBall()
 
 	case collisionLeftWall:
 		return ErrP2Win
@@ -43,7 +43,7 @@ func (e *canvasEngine) advanceGame() error {
 		// Continue
 	}
 
-	e.advanceBall().advancePlayers().fixPlayers()
+	e.advanceBall().advancePlayers().deglitchPlayers()
 
 	return nil
 }
@@ -57,32 +57,30 @@ func (e *canvasEngine) advanceBall() *canvasEngine {
 func (e *canvasEngine) advancePlayers() *canvasEngine {
 	switch {
 	case e.ballDirP1():
-		distP1Ball := (e.p1Y + (e.game.p1.height / 2)) - e.ballY
-		switch {
-		case distP1Ball > 0:
+		switch y := (e.p1Y + (e.game.p1.height / 2)) - e.ballY; {
+		case y > 0:
 			// Go up
 			e.p1YVelocity = max_y_vel_ratio * e.game.height
 			e.p1Y -= e.p1YVelocity / e.fps
-		case distP1Ball < 0:
+		case y < 0:
 			// Go down
 			e.p1YVelocity = max_y_vel_ratio * e.game.height
 			e.p1Y += e.p1YVelocity / e.fps
-		case distP1Ball == 0:
+		case y == 0:
 			// Perfect
 		}
 
 	case e.ballDirP2():
-		distP2Ball := (e.p2Y + (e.game.p2.height / 2)) - e.ballY
-		switch {
-		case distP2Ball > 0:
+		switch y := (e.p2Y + (e.game.p2.height / 2)) - e.ballY; {
+		case y > 0:
 			// Go up
 			e.p2YVelocity = max_y_vel_ratio * e.game.height
 			e.p2Y -= e.p2YVelocity / e.fps
-		case distP2Ball < 0:
+		case y < 0:
 			// Go down
 			e.p2YVelocity = max_y_vel_ratio * e.game.height
 			e.p2Y += e.p2YVelocity / e.fps
-		case distP2Ball == 0:
+		case y == 0:
 			// Perfect
 		}
 	}

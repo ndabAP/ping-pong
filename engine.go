@@ -56,7 +56,7 @@ func (e *canvasEngine) bootstrap() *canvasEngine {
 
 	time.Sleep(750 * time.Millisecond)
 
-	e.resetBall().resetPlayers().randomBall().log()
+	e.centerBall().centerPlayers().randomBallDir().log()
 
 	return e
 }
