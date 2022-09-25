@@ -69,6 +69,14 @@ func (e *canvasEngine) fixBall() *canvasEngine {
 	if e.ballY+e.game.ball.height >= e.game.height {
 		e.ballY = e.game.height - e.game.ball.height - 1
 	}
+	// P1
+	if e.ballX-e.game.ball.width <= e.p1X+e.game.p1.width {
+		e.ballX = e.p1X + e.game.p1.width + 1
+	}
+	// P2
+	if e.ballX+e.game.ball.width >= e.p2X {
+		e.ballX = e.p2X - 3
+	}
 	return e
 }
 
