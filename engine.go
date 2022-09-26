@@ -32,13 +32,13 @@ const (
 )
 
 func newCanvasEngine(g Game) *canvasEngine {
-	e := &canvasEngine{}
-
-	e.game = g
-
 	if int(_fps)%2 != 0 || int(_tps)%2 != 0 {
 		panic("values must be dividable by two")
 	}
+
+	e := &canvasEngine{}
+
+	e.game = g
 
 	e.fps = _fps
 	e.tps = _tps
@@ -77,10 +77,10 @@ func (e *canvasEngine) writeFrames(gameCtx context.Context, frames chan []byte) 
 
 					switch err {
 					case ErrP1Win:
-						e.game.p1Score += 1
+						e.game.p1.score += 1
 
 					case ErrP2Win:
-						e.game.p2Score += 1
+						e.game.p2.score += 1
 					}
 
 					// Reset
@@ -145,8 +145,10 @@ func (e *canvasEngine) log() *canvasEngine {
 func (e *canvasEngine) mapFrame() map[string]interface{} {
 	return map[string]interface{}{
 		"debug":      e.game.debug,
-		"p1Score":    e.game.p1Score,
-		"p2Score":    e.game.p2Score,
+		"fps":        e.fps,
+		"tps":        e.tps,
+		"p1Score":    e.game.p1.score,
+		"p2Score":    e.game.p2.score,
 		"gameWidth":  e.game.width,
 		"gameHeight": e.game.height,
 		"p1Width":    e.game.p1.width,

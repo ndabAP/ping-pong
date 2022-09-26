@@ -21,6 +21,7 @@
       connection.onmessage = event => {
         const {
           debug,
+          fps, tps,
           gameWidth, gameHeight,
           p1Score, p2Score,
           ballWidth, ballHeight,
@@ -79,9 +80,15 @@
         ctx.fill()
 
         if (debug) {
-          // P1
+          // FPS/TPS
           ctx.font = '12px sans-serif'
           ctx.fillStyle = 'white'
+          ctx.direction = 'rtl'
+          ctx.fillText(`fps: ${fps}, tps: ${tps}`, gameWidth - DEBUG_PADDING_X / 2, 0 + DEBUG_PADDING_Y)
+          // Reset
+          ctx.direction = 'ltr'
+
+          // P1
           ctx.fillText('P1', p1X + DEBUG_PADDING_X, p1Y + DEBUG_PADDING_Y)
           ctx.fillText(`x: ${p1X}, y: ${p1Y}`, p1X + DEBUG_PADDING_X, p1Y + DEFAULT_LINE_HEIGHT + DEBUG_PADDING_Y)
           ctx.fillText(`y velocity: ${p1YVelocity}`, p1X + DEBUG_PADDING_X, p1Y + DEFAULT_LINE_HEIGHT * 2 + DEBUG_PADDING_Y)

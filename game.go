@@ -11,8 +11,7 @@ type Game struct {
 
 	width, height float64
 
-	p1, p2           player
-	p1Score, p2Score uint
+	p1, p2 player
 
 	ball ball
 
