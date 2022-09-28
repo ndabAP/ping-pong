@@ -81,10 +81,9 @@
 
         if (debug) {
           // FPS/TPS
-          ctx.font = '12px sans-serif'
           ctx.fillStyle = 'white'
           ctx.direction = 'rtl'
-          ctx.fillText(`fps: ${fps}, tps: ${tps}`, gameWidth - DEBUG_PADDING_X / 2, 0 + DEBUG_PADDING_Y)
+          ctx.fillText(`fps: ${fps}, tps: ${tps}`, gameWidth - DEBUG_PADDING_X / 2, 0 + DEBUG_PADDING_Y * 1.5)
           // Reset
           ctx.direction = 'ltr'
 
