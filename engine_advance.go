@@ -66,8 +66,9 @@ func (e *canvasEngine) advancePlayers() *canvasEngine {
 			// Go down
 			e.p1YVelocity = max_y_vel_ratio * e.game.height
 			e.p1Y += e.p1YVelocity / e.fps
-		case y == 0:
+		case y > -0.9 && y < 0.9:
 			// Perfect
+			e.p1YVelocity = 0
 		}
 
 	case e.ballDirP2():
@@ -80,8 +81,9 @@ func (e *canvasEngine) advancePlayers() *canvasEngine {
 			// Go down
 			e.p2YVelocity = max_y_vel_ratio * e.game.height
 			e.p2Y += e.p2YVelocity / e.fps
-		case y == 0:
+		case y > -0.9 && y < 0.9:
 			// Perfect
+			e.p2YVelocity = 0
 		}
 	}
 	return e
