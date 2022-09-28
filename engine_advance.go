@@ -57,6 +57,8 @@ func (e *canvasEngine) advanceBall() *canvasEngine {
 func (e *canvasEngine) advancePlayers() *canvasEngine {
 	switch {
 	case e.ballDirP1():
+		e.p2YVelocity = 0
+
 		switch y := (e.p1Y + (e.game.p1.height / 2)) - e.ballY; {
 		case y > 0:
 			// Go up
@@ -72,6 +74,8 @@ func (e *canvasEngine) advancePlayers() *canvasEngine {
 		}
 
 	case e.ballDirP2():
+		e.p1YVelocity = 0
+
 		switch y := (e.p2Y + (e.game.p2.height / 2)) - e.ballY; {
 		case y > 0:
 			// Go up
