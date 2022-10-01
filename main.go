@@ -38,10 +38,10 @@ func serveWs(w http.ResponseWriter, r *http.Request) {
 	done := make(chan struct{}, 1)
 
 	g := NewGame(1000, 600, 10, 150, 10, 150, 8, 8)
-	jsonFrames := make(chan []byte, 10)
+	jsonFrames := make(chan []byte, 10) // 10 frames buffer
 	go func() {
-		for jsonSnapshot := range jsonFrames {
-			ws.WriteMessage(websocket.TextMessage, jsonSnapshot)
+		for f := range jsonFrames {
+			ws.WriteMessage(websocket.TextMessage, f)
 		}
 	}()
 	g.Start(r.Context(), jsonFrames)

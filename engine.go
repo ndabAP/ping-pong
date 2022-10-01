@@ -141,7 +141,6 @@ func (e *canvasEngine) log() *canvasEngine {
 	return e
 }
 
-// TODO Convert to int here already
 func (e *canvasEngine) mapFrame() map[string]interface{} {
 	return map[string]interface{}{
 		"debug":      e.game.debug,
