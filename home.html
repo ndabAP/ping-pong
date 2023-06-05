@@ -2,26 +2,29 @@
 
 <head>
   <script type="text/javascript">
+    // Wait for DOM
     window.onload = () => {
       if (!window["WebSocket"]) {
         throw new Error('browser doesn\'t support websocket')
       }
 
+      const websocket = new WebSocket(`ws://${document.location.host}/ws`)
+
+      const canvasElement = document.getElementById('canvas')
+      const ctx = canvasElement.getContext('2d')
+
+      canvasElement.style.border = '2px solid white'
+
       const DEBUG_PADDING_X = 20
       const DEBUG_PADDING_Y = 15
       const DEFAULT_LINE_HEIGHT = 16
 
-      const connection = new WebSocket(`ws://${document.location.host}/ws`)
-
-      const canvas = document.getElementById('canvas')
-      const ctx = canvas.getContext('2d')
-
-      canvas.style.border = '2px solid white'
-
-      connection.onmessage = event => {
+      // User interface
+      websocket.onmessage = event => {
         const {
           debug,
-          fps, tps,
+          fps,
+          tps,
           gameWidth, gameHeight,
           p1Score, p2Score,
           ballWidth, ballHeight,
@@ -31,13 +34,13 @@
           p2Width, p2Height,
           p1X, p1Y,
           p2X, p2Y,
-          p1XVelocity, p1YVelocity,
-          p2XVelocity, p2YVelocity,
+          p1YVelocity,
+          p2YVelocity,
         } = JSON.parse(event.data)
 
         // Game
-        canvas.width = gameWidth
-        canvas.height = gameHeight
+        canvasElement.width = gameWidth
+        canvasElement.height = gameHeight
 
         // Scores
         // P1
@@ -112,6 +115,27 @@
           ctx.stroke()
         }
       }
+
+      // Inputs
+      document.addEventListener('keydown', event => {
+        console.debug(event)
+
+        const { key } = event
+        switch (key) {
+          case 'ArrowUp':
+            websocket.send(key)
+            break
+
+          case 'ArrowDown':
+            websocket.send(key)
+            break
+        }
+      })
+
+      // Error
+      websocket.addEventListener('error', event => {
+        console.error(event)
+      })
     }
   </script>
 </head>
