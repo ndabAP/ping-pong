@@ -4,8 +4,8 @@
 
 ## How to start
 
-To start the Canvas engine, download or pull the repository to start the backend
-server:
+To play with the Canvas engine, download or pull the repository to start the
+backend server:
 
 ```bash
 $ go run *.go -debug
@@ -16,8 +16,9 @@ browser.
 
 ## How to play
 
-There are two supported inputs available: <kbd>↑</kbd> moves the left player
-(player one) up and <kbd>↓</kbd> moves him down.
+The left player is player one, the right player two. There are two supported
+inputs available: <kbd>↑</kbd> moves player one up and <kbd>↓</kbd> moves him
+down.
 
 ## API
 
