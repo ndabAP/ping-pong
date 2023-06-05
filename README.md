@@ -18,7 +18,7 @@ browser.
 
 The left player is player one, the right player two. There are two supported
 inputs available: <kbd>↑</kbd> moves player one up and <kbd>↓</kbd> moves him
-down.
+down. Players get points for goals.
 
 ## API
 

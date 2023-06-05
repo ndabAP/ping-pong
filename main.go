@@ -58,6 +58,7 @@ func serveWs(ws *websocket.Conn) {
 	engine := engine.NewCanvasEngine(game, 60)
 	engine.SetDebug(*debug)
 
+	// User interface
 	frames := make(chan []byte, 1)
 	go func(frames chan []byte) {
 		for frame := range frames {
@@ -65,7 +66,7 @@ func serveWs(ws *websocket.Conn) {
 		}
 	}(frames)
 
-	// input captures user inputs
+	// User input
 	input := make(chan []byte, 1)
 	go func() {
 		buf := make([]byte, 2<<6)

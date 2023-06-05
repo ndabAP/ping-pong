@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-// CanvasEngine is an ping_pong engine for browsers with Canvas support
+// CanvasEngine is a ping-pong engine for browsers with Canvas support
 type CanvasEngine struct {
 	// Static
 	fps, tps float64
@@ -25,6 +25,7 @@ type CanvasEngine struct {
 	p1YVelocity, p2YVelocity     float64
 	ballXVelocity, ballYVelocity float64
 
+	// Error of the current tick
 	err error
 
 	debug bool
@@ -51,18 +52,17 @@ func NewCanvasEngine(g game, fps float64) *CanvasEngine {
 
 // SetDebug sets the Canvas engines debug state
 func (e *CanvasEngine) SetDebug(debug bool) *CanvasEngine {
+	engineLogger.Printf("debug %t", debug)
 	e.debug = debug
 	return e
 }
 
-// NewRound resets the ball and players and starts a new round. It accepts
-// a frames channel to write into and user input to read from
+// NewRound resets the ball, players and starts a new round. It accepts
+// a frames channel to write into and input channel to read from
 func (e *CanvasEngine) NewRound(ctx context.Context, frames, input chan []byte) {
 	engineLogger.Println("new round")
 
 	time.Sleep(time.Second * 1)
-
-	engineLogger.Println("reset")
 
 	e.reset()
 
@@ -93,22 +93,22 @@ func (e *CanvasEngine) NewRound(ctx context.Context, frames, input chan []byte) 
 			jsonTick, _ := json.Marshal(e)
 			frames <- jsonTick
 
-			engineLogger.Println(string(jsonTick))
+			engineLogger.Printf("tick: %s", string(jsonTick))
 		}
 	}()
 
-	// Reads user input and moves player according to it
+	// Reads user input and moves player one according to it
 	go func(input chan []byte) {
 		for key := range input {
 			key = bytes.Trim(key, "\x00")
 
 			switch k := string(key); k {
 			case "ArrowUp":
-				engineLogger.Println(k)
+				engineLogger.Printf("key %s", k)
 				e.p1Down()
 
 			case "ArrowDown":
-				engineLogger.Println(k)
+				engineLogger.Printf("key %s", k)
 				e.p1Up()
 			}
 		}
@@ -172,40 +172,7 @@ const (
 	pinput_dist = 4
 )
 
-// Reset
-
-func (e *CanvasEngine) reset() *CanvasEngine {
-	e.err = nil
-	return e.resetBall().resetPlayers()
-}
-
-func (e *CanvasEngine) resetBall() *CanvasEngine {
-	// Center ball
-	e.ballX = e.game.width / 2.0
-	e.ballY = e.game.height / 2.0
-	// Random direction
-	if rand.Intn(10) < 5 {
-		e.ballXVelocity = -default_ball_x_vel_ratio * e.game.width
-		y := min_ball_y_vel_ratio*e.game.height + rand.Float64()*((max_y_vel_ratio*e.game.height)-(min_ball_y_vel_ratio*e.game.height))
-		e.ballYVelocity = -y
-	} else {
-		e.ballXVelocity = default_ball_x_vel_ratio * e.game.width
-		y := min_ball_y_vel_ratio*e.game.height + rand.Float64()*((max_y_vel_ratio*e.game.height)-(min_ball_y_vel_ratio*e.game.height))
-		e.ballYVelocity = y
-	}
-	return e
-}
-
-func (e *CanvasEngine) resetPlayers() *CanvasEngine {
-	// P1
-	e.p1X = 0 + default_padding
-	e.p1Y = e.game.height/2 - e.game.p1.height/2
-	// P2
-	e.p2X = e.game.width - +e.game.p1.width - default_padding
-	e.p2Y = e.game.height/2 - e.game.p2.height/2
-	return e
-}
-
+// tick calculates the next frame
 func (e *CanvasEngine) tick() {
 	switch e.detectColl() {
 
@@ -253,40 +220,6 @@ func (e *CanvasEngine) tick() {
 	}
 
 	e.advance().deOutOfBoundsPlayers()
-}
-
-func (e *CanvasEngine) advance() *CanvasEngine {
-	e.advanceBall().advancePlayers()
-	return e
-}
-
-// advanceBall advances the ball one tick or frame
-func (e *CanvasEngine) advanceBall() *CanvasEngine {
-	e.ballX += e.ballXVelocity / e.fps
-	e.ballY += e.ballYVelocity / e.fps
-	return e
-}
-
-// advancePlayers advances the players one tick or frame
-func (e *CanvasEngine) advancePlayers() *CanvasEngine {
-	switch {
-	case e.ballDirP1():
-		e.p2YVelocity = 0
-
-	case e.ballDirP2():
-		switch y := (e.p2Y + (e.game.p2.height / 2)) - e.ballY; {
-		case y > 0:
-			e.p2YVelocity = max_y_vel_ratio * e.game.height
-			e.p2Y -= e.p2YVelocity / e.fps
-		case y < 0:
-			e.p2YVelocity = max_y_vel_ratio * e.game.height
-			e.p2Y += e.p2YVelocity / e.fps
-		case y > -0.9 && y < 0.9:
-			e.p2YVelocity = 0
-		}
-	}
-
-	return e
 }
 
 func (e *CanvasEngine) ballDirP1() bool {
@@ -415,6 +348,72 @@ func (e *CanvasEngine) isCollBottomRight() bool {
 
 // Mutations
 
+func (e *CanvasEngine) reset() *CanvasEngine {
+	e.err = nil
+	return e.resetBall().resetPlayers()
+}
+
+func (e *CanvasEngine) resetBall() *CanvasEngine {
+	// Center ball
+	e.ballX = e.game.width / 2.0
+	e.ballY = e.game.height / 2.0
+	// Random direction
+	if rand.Intn(10) < 5 {
+		e.ballXVelocity = -default_ball_x_vel_ratio * e.game.width
+		y := min_ball_y_vel_ratio*e.game.height + rand.Float64()*((max_y_vel_ratio*e.game.height)-(min_ball_y_vel_ratio*e.game.height))
+		e.ballYVelocity = -y
+	} else {
+		e.ballXVelocity = default_ball_x_vel_ratio * e.game.width
+		y := min_ball_y_vel_ratio*e.game.height + rand.Float64()*((max_y_vel_ratio*e.game.height)-(min_ball_y_vel_ratio*e.game.height))
+		e.ballYVelocity = y
+	}
+	return e
+}
+
+func (e *CanvasEngine) resetPlayers() *CanvasEngine {
+	// P1
+	e.p1X = 0 + default_padding
+	e.p1Y = e.game.height/2 - e.game.p1.height/2
+	// P2
+	e.p2X = e.game.width - +e.game.p1.width - default_padding
+	e.p2Y = e.game.height/2 - e.game.p2.height/2
+	return e
+}
+
+func (e *CanvasEngine) advance() *CanvasEngine {
+	e.advanceBall().advancePlayers()
+	return e
+}
+
+// advanceBall advances the ball one tick or frame
+func (e *CanvasEngine) advanceBall() *CanvasEngine {
+	e.ballX += e.ballXVelocity / e.fps
+	e.ballY += e.ballYVelocity / e.fps
+	return e
+}
+
+// advancePlayers advances the players one tick or frame
+func (e *CanvasEngine) advancePlayers() *CanvasEngine {
+	switch {
+	case e.ballDirP1():
+		e.p2YVelocity = 0
+
+	case e.ballDirP2():
+		switch y := (e.p2Y + (e.game.p2.height / 2)) - e.ballY; {
+		case y > 0:
+			e.p2YVelocity = max_y_vel_ratio * e.game.height
+			e.p2Y -= e.p2YVelocity / e.fps
+		case y < 0:
+			e.p2YVelocity = max_y_vel_ratio * e.game.height
+			e.p2Y += e.p2YVelocity / e.fps
+		case y > -0.9 && y < 0.9:
+			e.p2YVelocity = 0
+		}
+	}
+
+	return e
+}
+
 func (e *CanvasEngine) p1Up() *CanvasEngine {
 	e.p1YVelocity = pinput_dist
 	e.p1Y += pinput_dist
@@ -450,8 +449,6 @@ func (e *CanvasEngine) inverseBallYVelocity() *CanvasEngine {
 	}
 	return e
 }
-
-// Out of bounds
 
 func (e *CanvasEngine) deOutOfBoundsPlayers() *CanvasEngine {
 	// P1, top
