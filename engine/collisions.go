@@ -15,7 +15,7 @@ const (
 	collP1Top
 	collP2Bottom
 	collP2Top
-	collP1 // TODO: Can be a the same time as above?
+	collP1
 	collP2
 
 	collBottom
