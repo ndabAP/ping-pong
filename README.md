@@ -2,6 +2,8 @@
 
 `ping-pong` is a generic pong implementation in Go with a Canvas engine.
 
+![Screenshot from 2023-06-06 07-46-48](https://github.com/ndabAP/ping-pong/assets/8510570/86c9569e-9892-4401-a96a-ce63adb6af82)
+
 ## How to start
 
 To play with the Canvas engine, download or pull the repository to start the
@@ -35,3 +37,4 @@ To get the module:
 ```bash
 go get github.com/ndabAP/ping-pong
 ```
+
