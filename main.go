@@ -49,13 +49,13 @@ func serveWs(ws *websocket.Conn) {
 	defer ws.Close()
 
 	game := engine.NewGame(
-		1000,
+		800,
 		600,
 		engine.NewPlayer(10, 150),
 		engine.NewPlayer(10, 150),
 		engine.NewBall(5, 5),
 	)
-	engine := engine.NewCanvasEngine(game, 60)
+	engine := engine.NewCanvasEngine(game, 50)
 	engine.SetDebug(*debug)
 
 	// User interface
@@ -70,16 +70,13 @@ func serveWs(ws *websocket.Conn) {
 	input := make(chan []byte, 1)
 	defer close(input)
 	go func() {
-		buf := make([]byte, 2<<6)
-
 		for {
+			buf := make([]byte, 2<<6)
 			_, err := ws.Read(buf)
 			if err != nil && !errors.Is(err, io.EOF) {
 				serverLogger.Fatal(err.Error())
 			}
-
 			input <- buf
-			buf = make([]byte, 2<<6)
 		}
 	}()
 
