@@ -59,10 +59,10 @@ func (e *CanvasEngine) SetDebug(debug bool) *CanvasEngine {
 
 // NewRound resets the ball, players and starts a new round. It accepts
 // a frames channel to write into and input channel to read from
-func (e *CanvasEngine) NewRound(ctx context.Context, frames, input chan []byte) {
+func (e *CanvasEngine) NewRound(ctx context.Context, frames chan<- []byte, input <-chan []byte) {
 	engineLogger.Println("new round")
 
-	time.Sleep(time.Second * 1)
+	time.Sleep(time.Millisecond * 1500) // 1.5 seconds
 
 	e.reset()
 
@@ -78,15 +78,15 @@ func (e *CanvasEngine) NewRound(ctx context.Context, frames, input chan []byte) 
 			case errP1Win:
 				engineLogger.Println("p1 wins")
 				e.p1Score += 1
-				e.NewRound(ctx, frames, input)
 
+				e.NewRound(ctx, frames, input)
 				return
 
 			case errP2Win:
 				engineLogger.Println("p2 wins")
 				e.p2Score += 1
-				e.NewRound(ctx, frames, input)
 
+				e.NewRound(ctx, frames, input)
 				return
 			}
 
@@ -98,27 +98,26 @@ func (e *CanvasEngine) NewRound(ctx context.Context, frames, input chan []byte) 
 	}()
 
 	// Reads user input and moves player one according to it
-	go func(input chan []byte) {
+	go func() {
 		for key := range input {
 			key = bytes.Trim(key, "\x00")
 
 			switch k := string(key); k {
 			case "ArrowUp":
 				engineLogger.Printf("key %s", k)
-				e.p1Down()
+				e.p1Down() // The Canvas origin is top left
 
 			case "ArrowDown":
 				engineLogger.Printf("key %s", k)
 				e.p1Up()
 			}
 		}
-	}(input)
+	}()
 
 	<-ctx.Done()
 	engineLogger.Println("exiting")
 
 	close(frames)
-	close(input)
 }
 
 func (e *CanvasEngine) MarshalJSON() ([]byte, error) {
@@ -183,10 +182,9 @@ func (e *CanvasEngine) tick() {
 		collP2Bottom:
 		e.inverseBallXYVelocity().deOutOfBoundsBall()
 
-	case collP1:
-		e.inverseBallXVelocity().deOutOfBoundsBall()
-
-	case collP2:
+	case
+		collP1,
+		collP2:
 		e.inverseBallXVelocity().deOutOfBoundsBall()
 
 	case
@@ -201,10 +199,9 @@ func (e *CanvasEngine) tick() {
 		e.err = errP1Win
 		return
 
-	case collTop:
-		e.inverseBallYVelocity().deOutOfBoundsBall()
-
-	case collBottom:
+	case
+		collTop,
+		collBottom:
 		e.inverseBallYVelocity().deOutOfBoundsBall()
 
 	case collLeft:
@@ -216,11 +213,13 @@ func (e *CanvasEngine) tick() {
 		return
 
 	case collNone:
-		// No collision
+
 	}
 
 	e.advance().deOutOfBoundsPlayers()
 }
+
+// State
 
 func (e *CanvasEngine) ballDirP1() bool {
 	return e.ballX <= e.game.width/2
@@ -381,8 +380,7 @@ func (e *CanvasEngine) resetPlayers() *CanvasEngine {
 }
 
 func (e *CanvasEngine) advance() *CanvasEngine {
-	e.advanceBall().advancePlayers()
-	return e
+	return e.advanceBall().advancePlayers()
 }
 
 // advanceBall advances the ball one tick or frame

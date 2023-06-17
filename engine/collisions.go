@@ -1,6 +1,5 @@
 package engine
 
-// collision is an event type from the ball's point of view
 type collision int
 
 const (

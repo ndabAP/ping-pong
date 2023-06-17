@@ -68,6 +68,7 @@ func serveWs(ws *websocket.Conn) {
 
 	// User input
 	input := make(chan []byte, 1)
+	defer close(input)
 	go func() {
 		buf := make([]byte, 2<<6)
 
