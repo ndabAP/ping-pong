@@ -32,14 +32,14 @@ type CanvasEngine struct {
 	debug bool
 }
 
+const CANVAS_DEFAULT_FPS = 60
+
 // NewCanvasEngine returns a new Canvas engine for browsers with Canvas support
 func NewCanvasEngine(g game) *CanvasEngine {
-	const def_fps = 50
-
 	e := new(CanvasEngine)
 	e.game = g
-	e.fps = def_fps
-	e.tps = 1000.0 / def_fps
+	e.fps = CANVAS_DEFAULT_FPS
+	e.tps = 1000.0 / e.fps
 
 	return e
 }
@@ -60,6 +60,7 @@ func (e *CanvasEngine) SetFPS(fps uint) *CanvasEngine {
 	}
 	engineLogger.Printf("fps %d", fps)
 	e.fps = float64(fps)
+	e.tps = 1000.0 / e.fps
 	return e
 }
 

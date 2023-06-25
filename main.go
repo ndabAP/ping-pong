@@ -18,6 +18,7 @@ var (
 	serverLogger = log.New(os.Stdout, "[SERVER] ", 0)
 
 	debug = flag.Bool("debug", false, "")
+	fps   = flag.Uint("fps", engine.CANVAS_DEFAULT_FPS, "")
 )
 
 func main() {
@@ -57,7 +58,7 @@ func serveWs(ws *websocket.Conn) {
 	)
 	engine := engine.NewCanvasEngine(game)
 	engine.SetDebug(*debug)
-	engine.SetFPS(50)
+	engine.SetFPS(*fps)
 
 	// User interface
 	frames := make(chan []byte, 1)
