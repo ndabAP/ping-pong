@@ -1,13 +1,14 @@
 # ping-pong
 
-`ping-pong` is a generic pong implementation in Go with a Canvas engine.
+`ping-pong` tries to be a generic pong implementation, written in Go. It
+includes a Canvas engine playable in a browser wit Canvas support.
 
 ![Screenshot from 2023-06-06 07-46-48](https://github.com/ndabAP/ping-pong/assets/8510570/86c9569e-9892-4401-a96a-ce63adb6af82)
 
 ## How to start
 
-To play with the Canvas engine, download or pull the repository to start the
-backend server:
+To play in the browser with the Canvas engine, download or pull the repository
+to start the backend server:
 
 ```bash
 $ go run *.go -debug
@@ -38,3 +39,8 @@ To get the module:
 go get github.com/ndabAP/ping-pong
 ```
 
+## Future goals
+
+- Native sound generation
+- AI-guided player two
+- More retro style (e. g. retro GUI)

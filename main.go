@@ -55,8 +55,9 @@ func serveWs(ws *websocket.Conn) {
 		engine.NewPlayer(10, 150),
 		engine.NewBall(5, 5),
 	)
-	engine := engine.NewCanvasEngine(game, 50)
+	engine := engine.NewCanvasEngine(game)
 	engine.SetDebug(*debug)
+	engine.SetFPS(50)
 
 	// User interface
 	frames := make(chan []byte, 1)

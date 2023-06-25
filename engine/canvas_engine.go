@@ -28,24 +28,18 @@ type CanvasEngine struct {
 	// Error of the current tick
 	err error
 
+	// Engine debug state
 	debug bool
 }
 
 // NewCanvasEngine returns a new Canvas engine for browsers with Canvas support
-func NewCanvasEngine(g game, fps float64) *CanvasEngine {
-	if int(fps)%2 != 0 {
-		panic("fps must be dividable by two")
-	}
-	if fps < 1 {
-		panic("fps must be greater zero")
-	}
-
-	tps := 1000.0 / fps
+func NewCanvasEngine(g game) *CanvasEngine {
+	const def_fps = 50
 
 	e := new(CanvasEngine)
 	e.game = g
-	e.fps = fps
-	e.tps = tps
+	e.fps = def_fps
+	e.tps = 1000.0 / def_fps
 
 	return e
 }
@@ -57,6 +51,18 @@ func (e *CanvasEngine) SetDebug(debug bool) *CanvasEngine {
 	return e
 }
 
+func (e *CanvasEngine) SetFPS(fps uint) *CanvasEngine {
+	if int(fps)%2 != 0 {
+		panic("fps must be dividable by two")
+	}
+	if fps == 0 {
+		panic("fps must be greater zero")
+	}
+	engineLogger.Printf("fps %d", fps)
+	e.fps = float64(fps)
+	return e
+}
+
 // NewRound resets the ball, players and starts a new round. It accepts
 // a frames channel to write into and input channel to read from
 func (e *CanvasEngine) NewRound(ctx context.Context, frames chan<- []byte, input <-chan []byte) {
@@ -64,7 +70,7 @@ func (e *CanvasEngine) NewRound(ctx context.Context, frames chan<- []byte, input
 
 	time.Sleep(time.Millisecond * 1500) // 1.5 seconds
 
-	e.reset()
+	e.resetEngine()
 
 	// Calculates and writes frames
 	go func() {
@@ -155,22 +161,6 @@ func (e *CanvasEngine) MarshalJSON() ([]byte, error) {
 	})
 }
 
-// Constants
-
-const (
-	baseline                 = 0
-	default_padding          = 15
-	canvas_border_correction = 1
-
-	default_ball_x_vel_ratio = 0.25
-	min_ball_y_vel_ratio     = 0.1
-	max_y_vel_ratio          = 0.20
-
-	magic_p = 3
-
-	pinput_dist = 4
-)
-
 // tick calculates the next frame
 func (e *CanvasEngine) tick() {
 	switch e.detectColl() {
@@ -216,8 +206,24 @@ func (e *CanvasEngine) tick() {
 
 	}
 
-	e.advance().deOutOfBoundsPlayers()
+	e.advanceAll().deOutOfBoundsPlayers()
 }
+
+// Constants
+
+const (
+	baseline                 = 0
+	default_padding          = 15
+	canvas_border_correction = 1
+
+	default_ball_x_vel_ratio = 0.25
+	min_ball_y_vel_ratio     = 0.1
+	max_y_vel_ratio          = 0.20
+
+	magic_p = 3
+
+	pinput_dist = 4
+)
 
 // State
 
@@ -347,7 +353,7 @@ func (e *CanvasEngine) isCollBottomRight() bool {
 
 // Mutations
 
-func (e *CanvasEngine) reset() *CanvasEngine {
+func (e *CanvasEngine) resetEngine() *CanvasEngine {
 	e.err = nil
 	return e.resetBall().resetPlayers()
 }
@@ -379,7 +385,7 @@ func (e *CanvasEngine) resetPlayers() *CanvasEngine {
 	return e
 }
 
-func (e *CanvasEngine) advance() *CanvasEngine {
+func (e *CanvasEngine) advanceAll() *CanvasEngine {
 	return e.advanceBall().advancePlayers()
 }
 
