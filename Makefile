@@ -4,4 +4,4 @@ play_canvas:
 train_ai: ./ai/train.go
 	bash ./ai/train.go
 
-.PHONY: train_ai
+.PHONY: play_canvas
