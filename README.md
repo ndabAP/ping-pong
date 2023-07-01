@@ -15,7 +15,11 @@ $ go run *.go -debug
 ```
 
 Then open the frontend at [http://127.0.0.1:8080](http://127.0.0.1:8080) in your
-browser.
+browser. Alternatively, you can use `make`:
+
+```bash
+$ make play_canvas
+```
 
 ## How to play
 

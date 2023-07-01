@@ -8,8 +8,8 @@ import (
 )
 
 const (
-	CANVAS_DEFAULT_FPS = 60
-	INPUT_BUF_SIZE     = 2 << 8
+	DEFAULT_FPS    = 60
+	INPUT_BUF_SIZE = 2 << 8
 )
 
 // tick calculates the next frame
@@ -56,7 +56,7 @@ func (e *CanvasEngine) tick() {
 	case engine.CollNone:
 	}
 
-	e.advanceAll().deOutOfBoundsPlayers()
+	e.advance().deOutOfBoundsPlayers()
 }
 
 // Constants
@@ -72,7 +72,7 @@ const (
 
 	magic_p = 3
 
-	pinput_dist = 4
+	player_input_dist = 4
 )
 
 // State
@@ -203,7 +203,7 @@ func (e *CanvasEngine) isCollBottomRight() bool {
 
 // Mutations
 
-func (e *CanvasEngine) resetEngine() *CanvasEngine {
+func (e *CanvasEngine) reset() *CanvasEngine {
 	e.err = nil
 	return e.resetBall().resetPlayers()
 }
@@ -235,7 +235,7 @@ func (e *CanvasEngine) resetPlayers() *CanvasEngine {
 	return e
 }
 
-func (e *CanvasEngine) advanceAll() *CanvasEngine {
+func (e *CanvasEngine) advance() *CanvasEngine {
 	return e.advanceBall().advancePlayers()
 }
 
@@ -269,15 +269,15 @@ func (e *CanvasEngine) advancePlayers() *CanvasEngine {
 }
 
 func (e *CanvasEngine) p1Up() *CanvasEngine {
-	e.p1YVelocity = pinput_dist
-	e.p1Y += pinput_dist
+	e.p1YVelocity = player_input_dist
+	e.p1Y += player_input_dist
 	e.p1YVelocity = 0
 	return e
 }
 
 func (e *CanvasEngine) p1Down() *CanvasEngine {
-	e.p1YVelocity = pinput_dist
-	e.p1Y -= pinput_dist
+	e.p1YVelocity = player_input_dist
+	e.p1Y -= player_input_dist
 	e.p1YVelocity = 0
 	return e
 }

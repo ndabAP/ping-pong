@@ -19,7 +19,7 @@ var (
 	serverLogger = log.New(os.Stdout, "[SERVER] ", 0)
 
 	debug = flag.Bool("debug", false, "")
-	fps   = flag.Uint("fps", canvas.CANVAS_DEFAULT_FPS, "")
+	fps   = flag.Uint("fps", canvas.DEFAULT_FPS, "")
 )
 
 func main() {
@@ -57,17 +57,17 @@ func serveWs(ws *websocket.Conn) {
 		engine.NewPlayer(10, 150),
 		engine.NewBall(5, 5),
 	)
-	engine := canvas.New(&game)
+	engine := canvas.New(game)
 	engine.SetDebug(*debug)
 	engine.SetFPS(*fps)
 
 	// Frames
 	framesch := make(chan []byte, 1)
-	go func(frames chan []byte) {
-		for frame := range frames {
+	go func() {
+		for frame := range framesch {
 			ws.Write(frame)
 		}
-	}(framesch)
+	}()
 	// User input
 	inputch := make(chan []byte, 1)
 	defer close(inputch)

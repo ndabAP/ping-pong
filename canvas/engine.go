@@ -16,7 +16,7 @@ type CanvasEngine struct {
 	// Static
 	fps, tps float64
 
-	game *engine.Game
+	game engine.Game
 
 	// State
 	p1Score, p2Score int
@@ -37,10 +37,10 @@ type CanvasEngine struct {
 var engineLogger = log.New(os.Stdout, "[ENGINE] ", 0)
 
 // New returns a new Canvas engine for browsers with Canvas support
-func New(g *engine.Game) *CanvasEngine {
+func New(g engine.Game) *CanvasEngine {
 	e := new(CanvasEngine)
 	e.game = g
-	e.fps = CANVAS_DEFAULT_FPS
+	e.fps = DEFAULT_FPS
 	e.tps = 1000.0 / e.fps
 
 	return e
@@ -70,7 +70,7 @@ func (e *CanvasEngine) NewRound(ctx context.Context, framesch chan<- []byte, inp
 
 	time.Sleep(time.Millisecond * 1500) // 1.5 seconds
 
-	e.resetEngine()
+	e.reset()
 
 	// Calculates and writes frames
 	go func() {
