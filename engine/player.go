@@ -1,9 +1,9 @@
 package engine
 
-type player struct {
-	height, width float64
+type Player struct {
+	Height, Width float64
 }
 
-func NewPlayer(w, h uint) player {
-	return player{width: float64(w), height: float64(h)}
+func NewPlayer(w, h float64) Player {
+	return Player{Width: w, Height: h}
 }

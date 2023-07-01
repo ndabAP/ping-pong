@@ -42,5 +42,5 @@ go get github.com/ndabAP/ping-pong
 ## Future goals
 
 - Native sound generation
-- AI-guided player two
+- AI-controlled player two
 - More retro style (e. g. retro GUI)

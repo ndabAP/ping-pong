@@ -2,8 +2,7 @@
 
 <head>
   <script type="text/javascript">
-    // Wait for DOM
-    window.onload = () => {
+    const onLoadWindow = () => {
       if (!window["WebSocket"]) {
         throw new Error('browser doesn\'t support websocket')
       }
@@ -133,10 +132,11 @@
       })
 
       // Error
-      websocket.addEventListener('error', event => {
-        console.error(event)
-      })
+      websocket.addEventListener('error', console.error)
     }
+
+    // Wait for DOM
+    window.onload = onLoadWindow
   </script>
 </head>
 
@@ -148,17 +148,16 @@
 
     #container {
       width: 100%;
-      text-align: center;
     }
 
     canvas {
       border: none;
-      position: absolute;
-      top: 0;
       bottom: 0;
       left: 0;
-      right: 0;
       margin: auto;
+      position: absolute;
+      right: 0;
+      top: 0;
     }
   </style>
 

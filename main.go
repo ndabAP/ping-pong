@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/ndabAP/ping-pong/canvas"
 	"github.com/ndabAP/ping-pong/engine"
 
 	"golang.org/x/net/websocket"
@@ -18,7 +19,7 @@ var (
 	serverLogger = log.New(os.Stdout, "[SERVER] ", 0)
 
 	debug = flag.Bool("debug", false, "")
-	fps   = flag.Uint("fps", engine.CANVAS_DEFAULT_FPS, "")
+	fps   = flag.Uint("fps", canvas.CANVAS_DEFAULT_FPS, "")
 )
 
 func main() {
@@ -27,7 +28,7 @@ func main() {
 	http.HandleFunc("/", serveHome)
 	http.Handle("/ws", websocket.Handler(serveWs))
 
-	serverLogger.Println("try to open http://127.0.0.1:8080")
+	serverLogger.Println("open http://127.0.0.1:8080")
 
 	serverLogger.Fatal(http.ListenAndServe("127.0.0.1:8080", nil))
 }
@@ -56,32 +57,31 @@ func serveWs(ws *websocket.Conn) {
 		engine.NewPlayer(10, 150),
 		engine.NewBall(5, 5),
 	)
-	engine := engine.NewCanvasEngine(game)
+	engine := canvas.New(&game)
 	engine.SetDebug(*debug)
 	engine.SetFPS(*fps)
 
-	// User interface
-	frames := make(chan []byte, 1)
+	// Frames
+	framesch := make(chan []byte, 1)
 	go func(frames chan []byte) {
 		for frame := range frames {
 			ws.Write(frame)
 		}
-	}(frames)
-
+	}(framesch)
 	// User input
-	input := make(chan []byte, 1)
-	defer close(input)
+	inputch := make(chan []byte, 1)
+	defer close(inputch)
 	go func() {
 		for {
-			buf := make([]byte, 2<<6)
+			buf := make([]byte, canvas.INPUT_BUF_SIZE)
 			_, err := ws.Read(buf)
 			if err != nil && !errors.Is(err, io.EOF) {
 				serverLogger.Fatal(err.Error())
 			}
-			input <- buf
+			inputch <- buf
 		}
 	}()
 
 	ctx := context.Background()
-	engine.NewRound(ctx, frames, input)
+	engine.NewRound(ctx, framesch, inputch)
 }
