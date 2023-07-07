@@ -53,6 +53,7 @@ func (e *CanvasEngine) SetDebug(debug bool) *CanvasEngine {
 	return e
 }
 
+// SetFPS sets the Canvas engines frames per second
 func (e *CanvasEngine) SetFPS(fps uint) *CanvasEngine {
 	if fps <= 0 {
 		panic("fps must be greater zero")
@@ -61,6 +62,11 @@ func (e *CanvasEngine) SetFPS(fps uint) *CanvasEngine {
 	e.fps = float64(fps)
 	e.tps = 1000.0 / e.fps
 	return e
+}
+
+// Error returns the Canvas engines error
+func (e *CanvasEngine) Error() error {
+	return e.err
 }
 
 // NewRound resets the ball, players and starts a new round. It accepts

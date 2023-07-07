@@ -3,7 +3,7 @@
 `ping-pong` tries to be a generic pong implementation, written in Go. It
 includes a Canvas engine playable in a browser wit Canvas support.
 
-![Screenshot from 2023-06-06 07-46-48](https://github.com/ndabAP/ping-pong/assets/8510570/86c9569e-9892-4401-a96a-ce63adb6af82)
+![ping-pong](https://github.com/ndabAP/ping-pong/assets/8510570/86c9569e-9892-4401-a96a-ce63adb6af82)
 
 ## How to start
 
@@ -46,5 +46,5 @@ go get github.com/ndabAP/ping-pong
 ## Future goals
 
 - Native sound generation
-- AI-controlled player two
 - More retro style (e. g. retro GUI)
+- AI-controlled player two
